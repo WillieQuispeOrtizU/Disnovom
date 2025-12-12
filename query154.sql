@@ -83,35 +83,35 @@ arreglo_misc as (
 buscar_producto as (
    SELECT id_product , nickname_owner,product_title , id_contact_maker, nickname_owner_contact,  country_code code_country, observation, description, id_external, stock_min, stock_max,  id_pricelist, nickname_creator, creation_date date_creation,update_date date_update,  id_brand, nickname_owner_brand, commentary, id_measure, nickname_owner_measure, iscombo, hasinventory, id_filepath_image, nickname_owner_filepath, part_number, is_inventoriable, is_saleable, is_buyable, id_product_type type_product_id, nickname_owner_type, id_product_subtype subtype_product_id, nickname_owner_subtype, quantity_stock stock_quantity,nickname_owner_pricelist
 	FROM public.product
-	where  id_tag isnull 
-    and nickname_owner_tag isnull
-    and
-  (CASE WHEN '@t_image' NOTNULL  and 1=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@t_image') z ) AS X ) 
+	where id_tag isnull 
+   and nickname_owner_tag isnull
+   and
+   (CASE WHEN '@t_image' NOTNULL  and 1=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@t_image') z ) AS X ) 
                       then id_filepath_image notnull 
 	            WHEN '@t_image' NOTNULL  and 2=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@t_image') z ) AS X ) 
                       then id_filepath_image isnull  
                else  true end) and  
-	        (CASE WHEN '@inventoriable_is' NOTNULL  and 1=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@inventoriable_is') z ) AS X ) 
+	           (CASE WHEN '@inventoriable_is' NOTNULL  and 1=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@inventoriable_is') z ) AS X ) 
                       then is_inventoriable=true
 	            WHEN '@inventoriable_is' NOTNULL  and 2=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@inventoriable_is') z ) AS X ) 
                       then is_inventoriable=false 
                else  true end) and 
-	         (CASE WHEN '@saleable_is' NOTNULL  and 1=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@saleable_is') z ) AS X ) 
+	           (CASE WHEN '@saleable_is' NOTNULL  and 1=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@saleable_is') z ) AS X ) 
                       then is_saleable=true
 	            WHEN '@saleable_is' NOTNULL  and 2=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@saleable_is') z ) AS X ) 
                       then is_saleable=false 
                else  true end) and 
-	            (CASE WHEN '@buyable_is' NOTNULL  and 1=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@buyable_is') z ) AS X ) 
+	           (CASE WHEN '@buyable_is' NOTNULL  and 1=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@buyable_is') z ) AS X ) 
                       then is_buyable=true
 	            WHEN '@buyable_is' NOTNULL  and 2=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@buyable_is') z ) AS X ) 
                       then is_buyable=false 
                else  true end) and 
-	          (CASE WHEN '@combo_is' NOTNULL  and 1=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@combo_is') z ) AS X ) 
+	           (CASE WHEN '@combo_is' NOTNULL  and 1=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@combo_is') z ) AS X ) 
                       then iscombo=true
 	            WHEN '@combo_is' NOTNULL  and 2=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@combo_is') z ) AS X ) 
                       then iscombo=false 
                else  true end) and 
-	          (CASE WHEN '@t_hasinventory' NOTNULL  and 1=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@t_hasinventory') z ) AS X ) 
+	           (CASE WHEN '@t_hasinventory' NOTNULL  and 1=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@t_hasinventory') z ) AS X ) 
                       then hasinventory=true
 	            WHEN '@t_hasinventory' NOTNULL  and 2=(  SELECT valor FROM (SELECT replace(z::text,'"','')::integer VALOR from json_array_elements('@t_hasinventory') z ) AS X ) 
                       then hasinventory=false 
@@ -119,10 +119,12 @@ buscar_producto as (
 	           (CASE WHEN '@maker_contact_id' NOTNULL Then id_contact_maker::text in  (SELECT replace(z::text,'"','') from json_array_elements('@maker_contact_id') z) else true end) and
 	           (CASE WHEN '@code_country' NOTNULL Then country_code in  (SELECT replace(z::text,'"','') from json_array_elements('@code_country') z) else true end) and
 	           (CASE WHEN '@brand_id' NOTNULL Then id_brand::text in  (SELECT replace(z::text,'"','') from json_array_elements('@brand_id') z) else true end) and
-               (CASE WHEN '@measure_id' NOTNULL Then id_measure::text in  (SELECT replace(z::text,'"','') from json_array_elements('@measure_id') z) else true end) and
-               (CASE WHEN '@type_product_id' NOTNULL Then id_product_type::text in  (SELECT replace(z::text,'"','') from json_array_elements('@type_product_id') z) else true end) and
-               (CASE WHEN '@subtype_product_id' NOTNULL Then id_product_subtype::text in  (SELECT replace(z::text,'"','') from json_array_elements('@subtype_product_id') z) else true end) and
-                nickname_owner='__owner__' and state 
+              (CASE WHEN '@measure_id' NOTNULL Then id_measure::text in  (SELECT replace(z::text,'"','') from json_array_elements('@measure_id') z) else true end) and
+              (CASE WHEN '@type_product_id' NOTNULL Then id_product_type::text in  (SELECT replace(z::text,'"','') from json_array_elements('@type_product_id') z) else true end) and
+              (CASE WHEN '@subtype_product_id' NOTNULL Then id_product_subtype::text in  (SELECT replace(z::text,'"','') from json_array_elements('@subtype_product_id') z) else true end) and
+              (CASE WHEN '@external_id' NOTNULL Then id_external::text in  (SELECT replace(z::text,'"','') from json_array_elements('@external_id') z) else true end) and
+                nickname_owner='__owner__' 
+                and state 
 	         /*SECONDARY_FILTER*//*END SECONDARY_FILTER*/ 
 ),
 
